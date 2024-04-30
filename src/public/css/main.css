@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	height: 100vh;
+	font-family: Garamond, sans-serif;
+	font-size: 1.25em;
+	text-align: center;
+	margin: auto;
+	margin-top: 0px;
+	padding: none;
+}
+
+.home-link {
+	position: absolute;
+	top: 0.25em;
+	left: 0.75em;
+}
+
+.login-status {
+	position: absolute;
+	top: 1.75em;
+	right: 2em;
+}
+
+header {
+	position: relative;
+	background-color: #ccddff;
+	margin: 0px;
+	height: 4em;
+	padding: 0.25em 1em 0em 1em;
+}
+
+nav > a, nav > a:visited {
+	color: black;
+}
+
+h1, h2, h3 {
+	text-align: center;
+}
+
+#outer {
+	height: 100vh;
+	background-color: #fff;
+	margin: auto;
+	text-align: left;
+}
+
+#home-outer{
+	text-align: center;
+	display: flex;
+	justify-content:space-around;
+}
+
+table {
+    width: 100%; 
+    border-collapse: collapse; 
+    border: 1px solid black;
+  }
+  
+  td {
+    border: 1px solid black; 
+    padding: 8px; 
+  }
+  
+
+div.content {
+	padding: 0em 1em 1em 1em;
+}
+
+.note {
+	color:#888; 
+	padding-top: 1em;
+}
+
+.error {
+	background-color: #eecccc;
+	padding: 0.25em;
+	margin-bottom: 1em;
+	text-align: center;	
+}
+
+.success {
+	background-color: #cceecc;
+	padding: 0.25em;
+}
+
+form div {
+	padding-bottom: 0.5em;
+}
+
+textarea {
+	width: 25em;
+	height: 12em;
+}
+
+form textarea, form input {
+	display: block;
+}
+
+input {
+	border: 1px solid #555;
+	font-size: 1em;
+}
+
+#logo {
+	height: 4em;
+}
