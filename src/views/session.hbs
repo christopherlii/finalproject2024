@@ -1,0 +1,57 @@
+<!-- Lets just get all the info out there first, and then worry about styling, etc.
+- as long as the following conditions are met, it doesnt matter how its displayed (for now)
+    - working timer
+    - displaying what status the session is in
+    - displaying the users participating in the session
+    - displaying the amount of sections are left
+    - display the type of session it is (mainly 25/5 or 50/10)
+ -->
+
+<h2>{{sesh.name}}</h2>
+<h1 id="timer">timer</h1>
+
+
+<p id="user-list"></p>
+
+<div id="status">{{sesh.status}}</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>    
+    
+    //websocket stuff
+
+
+    const socket = io('http://localhost:3000', {
+        path: '/socket.io'
+    });
+
+    socket.on('timerUpdate', (time) => {
+        try{
+
+        
+            document.getElementById('timer').textContent = time;
+            document.getElementById('timer').textContent = "helloooo";
+            console.log(time);
+        }
+        catch(err)
+        {
+            console.log("ERROR UPDATING TIMER:", err);
+        }
+    });
+
+    //ideally want to be ablke to list all the users, not worried about that right now
+    socket.on('userJoined', (userId) => {
+        sesh.users = sesh.users + 1;
+        document.getElementById('user-list').textContent = "Number of Users: " + sesh.users;
+    });
+
+
+
+
+
+    //more js stuff
+
+  
+
+</script>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LockedIn</title>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+</head>
+<body>
+<div id="outer">
+<header>
+    <nav>
+		<span class="home-link">
+            <a href="/">
+                <img src="/img/logo.png" alt="LinkedIn Logo" id="logo">
+            </a> 
+        </span>
+        <span class="login-status">
+            {{#if user}}
+                {{user.username}}
+            {{else}}
+                <a href="/register">Register</a> or <a href="/login">Login</a>
+            {{/if}}
+	    </span>
+    </nav>
+</header>
+
+<div class="content">
+{{{ body }}}
+
+</div>
+
+<footer>
+
+</footer>
+
+</body>
+</html>

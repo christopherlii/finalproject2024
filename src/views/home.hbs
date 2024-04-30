@@ -1,0 +1,44 @@
+{{#if user}}
+    <h1>Welcome Back, {{user.username}}! </h1>
+    <h3>It's time to lock in.</h3>
+
+    <div id="home-outer">
+        <div id="current-sessions"> 
+            Current Sessions
+
+            <table>
+                <tbody>
+                    {{#each sessions}}
+                        <tr>
+                            <td><a href="/session/{{this.sessionId}}">{{this.name}}</a></td>
+                            <td>{{this.status}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+            <form action="/" method="POST" style="margin-top: 20px;">
+                <label>New Session Name: </label>
+                <input type="text" name="name" placeholder="Enter name">
+                <label>Number of Blocks </label>
+                <input type="text" name="sessionsLeft" placeholder="Enter number of sessions">
+
+                <button type="submit" id="add-session-button"> Create Session</button>
+            </form>
+        </div>
+
+
+        <!-- <div id="recent-sessions"> 
+            Recent Sessions
+            <table>
+
+            </table>
+        </div>
+        -->
+    </div>
+
+
+
+{{else}}
+    <div class="error"> There was an error logging in. Please try logging in again. </div>
+{{/if}}
