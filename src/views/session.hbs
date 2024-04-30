@@ -6,52 +6,70 @@
     - displaying the amount of sections are left
     - display the type of session it is (mainly 25/5 or 50/10)
  -->
+{{#if user}}
+    <h2>{{sesh.name}}</h2>
+    <h1 id="timer">25:00</h1>
+    <div id="controls">
+        <button id="startButton" onclick="startTimer()">Start</button>
+        <button id="pauseButton" onclick="pauseTimer()">Pause</button>
+    </div>
+    <p id="user-list">Number of Users: {{sesh.users}}</p>
 
-<h2>{{sesh.name}}</h2>
-<h1 id="timer">timer</h1>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script>
+        const socket = io();
 
+        // Event listener to receive timer updates from the server
+        socket.on('timerUpdate', (time) => {
+            updateTimer(time);
+        });
 
-<p id="user-list"></p>
-
-<div id="status">{{sesh.status}}</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script>    
-    
-    //websocket stuff
-
-
-    const socket = io('http://localhost:3000', {
-        path: '/socket.io'
-    });
-
-    socket.on('timerUpdate', (time) => {
-        try{
-
-        
-            document.getElementById('timer').textContent = time;
-            document.getElementById('timer').textContent = "helloooo";
-            console.log(time);
+        // Function to send timer updates to the server
+        function sendTimerUpdate(remainingTime) {
+            socket.emit('timerUpdate', remainingTime);
         }
-        catch(err)
-        {
-            console.log("ERROR UPDATING TIMER:", err);
+
+        // Pomodoro timer logic
+        let timerInterval;
+        let startTime;
+        let paused = false;
+        let elapsedTime = 0;
+        let remainingTime = 25 * 60 * 1000; // Initial timer value: 25 minutes
+        let status = 'work';
+
+        function updateTimer() {
+            const currentTime = Date.now();
+            elapsedTime = currentTime - startTime;
+            remainingTime = paused ? remainingTime : remainingTime - 1000;
+
+            if (remainingTime <= 0) {
+                // Timer finished
+                if(status === 'work')
+                {
+                    remainingTime = 5 * 60 * 1000;
+                    status = 'break';
+                }
+                else 
+                {
+                    remainingTime = 25 * 60 * 1000;
+                }
+
+
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            const minutes = Math.floor(remainingTime / 60000);
+            const seconds = Math.floor((remainingTime % 60000) / 1000);
+            const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Update timer display only if it has changed
+            const timerElement = document.getElementById('timer');
+            if (timerElement.textContent !== formattedTime) {
+                timerElement.textContent = formattedTime;
+            }
         }
-    });
-
-    //ideally want to be ablke to list all the users, not worried about that right now
-    socket.on('userJoined', (userId) => {
-        sesh.users = sesh.users + 1;
-        document.getElementById('user-list').textContent = "Number of Users: " + sesh.users;
-    });
-
-
-
-
-
-    //more js stuff
-
-  
-
-</script>
+    </script>
+{{else}}
+    <div class="error"> There was an error logging in. Please try logging in again. </div>
+{{/if}}

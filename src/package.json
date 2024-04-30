@@ -1,0 +1,25 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/session.test.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "handlebars": "^4.5.0"
+  },
+  "dependencies": {
+    "@handlebars/allow-prototype-access": "^1.0.5",
+    "chai": "^5.1.0",
+    "mocha": "^10.4.0",
+    "sinon": "^17.0.1",
+    "socket.io": "^4.7.5",
+    "supertest": "^7.0.0"
+  }
+}

@@ -35,17 +35,14 @@ const io = new Server(server, {
     path: '/socket.io'
 });
 
-const equalss = function(one, two, options)
-{
-    if(one === two)
-    {
-        options.fn(this);
-    }
-};
 
 app.engine('hbs', exphbs.engine({
     extname: '.hbs',
-    handlebars: allowInsecurePrototypeAccess(hbs)
+    handlebars: allowInsecurePrototypeAccess(hbs),
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true
+    }
 }));
 
 app.set('view engine', 'hbs');
@@ -103,8 +100,9 @@ const Sessions = mongoose.model('Sessions');
 router.get('/', async (req, res) => {
     try{
         const sessions = await CurrSessions.find().lean();
-
-        res.render('home', { sessions });
+        const user = req.user;
+        
+        res.render('home', { sessions, user: user, username: req.user.username});
     }
     catch(err)
     {
@@ -116,7 +114,7 @@ router.get('/', async (req, res) => {
 
 
 router.post('/', async (req, res) => {
-    const { name, sessionsLeft } = req.body;
+    const { name } = req.body;
     const date = new Date();
     const day = "" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + (date.getYear() + 1900);
     try
@@ -124,9 +122,8 @@ router.post('/', async (req, res) => {
         const sesh = new CurrSessions({
             name: name,
             date: day,
-            sectionsLeft: sessionsLeft,
             users: 1,
-            status: "Ready"
+            sessionId: name + '_' + date 
         });
 
         await sesh.save();
@@ -158,7 +155,7 @@ router.get('/login', function(req, res) {
 });
 
 router.get('/register', function(req, res) {
-    res.render('register');
+    res.render('register', );
 });
 
 //register post
@@ -197,46 +194,50 @@ router.post('/register', function(req, res) {
 
 
 
-
-
-
-
-  //respond to GET requests for specific sessions
-
-  router.get('/session/:paramName', async (req, res) => {
+  app.get('/session/:_id', async (req, res) => {
     try {
-        const sessionId = req.params.paramName;
-        const sesh = await Sessions.findOne({ sessionId: sessionId }).lean();
+        const sessionId = req.params._id;
+        const sesh = await CurrSessions.findOne({ _id: sessionId }).lean();
 
-        const id = req.params.sessionId;
-        console.log("ACCESSED SESSIONID: ", id);
-        if(!sesh)
-        {
+        if (!sesh) {
             res.status(404);
-            res.send('404 Not Found');
-            return;
+            return res.send('404 Not Found');
         }
 
-        res.render('session', {sesh: sesh});
-    }
-    catch (err)
-    {
+        // Pass the current user and session data to the template
+        const user = req.user;
+        res.render('session', { sesh: sesh, user: user });
+
+        // WebSocket logic
+        io.on('connection', (socket) => {
+            console.log("New User Joined");
+
+            // Emit the initial timer value to the newly connected client
+            socket.emit('timerUpdate', sesh.timerValue);
+
+            // Handle timer updates from clients
+            socket.on('timerUpdate', (remainingTime) => {
+                // Broadcast the timer update to all clients
+                io.emit('timerUpdate', remainingTime);
+            });
+
+
+
+            // Other WebSocket event handlers
+            // ...
+        });
+    } catch (err) {
         console.log(err);
         res.status(500);
-        res.send('500 Internal Error');
+        return res.send('500 Internal Error');
     }
-  });
-
-
-
-
+});
 
 
   //websocket communication
   //handling joining sessions, notifying other clients
   //timer updates
 
-  let currTime = 0;
   let timerInterval = 0;
    
   io.on('connection', (socket) => {
@@ -248,36 +249,40 @@ router.post('/register', function(req, res) {
         console.log("SOCKET joinSESSION called");
     });
 
+
+
     socket.on('timerUpdate', (sessionId, remainingTime) => {
         Sessions.findOneAndUpdate(
-            { sessionId },
-            { endTime: new Date(Date.now() + remainingTime * 1000) },
-            { new: true },
-            (err, session) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                console.log("SESSION: ", session);
-                io.to(sessionId).emit('timerUpdate', remainingTime);
-            }
-        );
-
+            { _id: sessionId }, // Use _id instead of sessionId
+            { status: 'work' }, // Update the status to 'work'
+            { new: true } // Return the updated document
+        )
+        .then(session => {
+            console.log("SESSION: ", session);
+            io.to(sessionId).emit('timerUpdate', remainingTime);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    
         console.log("DEBUGGING: session ID that we are trying to find is: ", sessionId);
-
+    
         if (!timerInterval) {
             timerInterval = setInterval(() => {
-              currTime++;
-              io.emit('timerUpdate', currTime);
+              remainingTime--;
+              io.emit('timerUpdate', remainingTime);
             }, 1000);
-          }
-
+        }
+    
         if (io.engine.clientsCount === 0) {
             clearInterval(timerInterval);
             timerInterval = null;
-            currTime = 0;
-          }
+        }
+
+
+        
     });
+    
 
     socket.on('userJoined', (userId) => {
         console.log("EMITTING joinedUSER");
@@ -301,5 +306,6 @@ server.listen(process.env.PORT || 3000, () => {
 });
 
 export{
-    router
+    router,
+    app
 };
