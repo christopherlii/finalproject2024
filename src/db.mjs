@@ -48,7 +48,7 @@ How sessions should work:
 
 */
 const sessionsSchema = new mongoose.Schema({
-    name: {type: String, required: true},
+    name: String,
     sessionId: String,
     date: String,
     sectionsLeft: Number,

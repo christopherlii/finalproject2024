@@ -1,19 +1,16 @@
-<!-- Lets just get all the info out there first, and then worry about styling, etc.
-- as long as the following conditions are met, it doesnt matter how its displayed (for now)
-    - working timer
-    - displaying what status the session is in
-    - displaying the users participating in the session
-    - displaying the amount of sections are left
-    - display the type of session it is (mainly 25/5 or 50/10)
- -->
 {{#if user}}
-    <h2>{{sesh.name}}</h2>
-    <h1 id="timer">25:00</h1>
-    <div id="controls">
-        <button id="startButton" onclick="startTimer()">Start</button>
-        <button id="pauseButton" onclick="pauseTimer()">Pause</button>
+    <h2 class="text-xl font-bold">{{sesh.name}}</h2>
+    <h1 id="timer" class="text-3xl font-semibold">25:00</h1>
+
+    <!-- Comment Section -->
+    <div id="commentSection" class="mt-6">
+        <h3 class="text-lg font-semibold">Comments</h3>
+        <ul id="commentsList" class="list-disc pl-5"></ul>
+        <form id="commentForm" class="mt-4">
+            <input type="text" id="commentInput" placeholder="Write a comment..." required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-3">Submit</button>
+        </form>
     </div>
-    <p id="user-list">Number of Users: {{sesh.users}}</p>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
     <script>
@@ -26,6 +23,7 @@
 
         // Function to send timer updates to the server
         function sendTimerUpdate(remainingTime) {
+            console.log('reminaing time', remainingTime);
             socket.emit('timerUpdate', remainingTime);
         }
 
@@ -34,8 +32,41 @@
         let startTime;
         let paused = false;
         let elapsedTime = 0;
-        let remainingTime = 25 * 60 * 1000; // Initial timer value: 25 minutes
+        let remainingTime = 1 * 60 * 1000; // Initial timer value: 25 minutes
         let status = 'work';
+
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    if(status === 'work')
+                    {
+                        duration = 25 * 60 * 1000;
+                        timer = duration;
+                    }
+                    else
+                    {
+                        duration = 5 * 60 * 1000;
+                        timer = duration;
+                    } // Restart the timer automatically
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            var fiveMinutes = 60 * 25, // Change this to your desired initial time
+                display = document.querySelector('#timer');
+            startTimer(fiveMinutes, display);
+        };
+
 
         function updateTimer() {
             const currentTime = Date.now();
@@ -54,7 +85,6 @@
                     remainingTime = 25 * 60 * 1000;
                 }
 
-
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
@@ -69,7 +99,22 @@
                 timerElement.textContent = formattedTime;
             }
         }
+
+        // Comment functionality
+        document.getElementById('commentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const commentInput = document.getElementById('commentInput');
+            const newComment = "Anon said: " + commentInput.value;
+            if (newComment.trim()) {
+                // Append comment to the comment list
+                const commentsList = document.getElementById('commentsList');
+                const commentItem = document.createElement('li');
+                commentItem.textContent = newComment;
+                commentsList.appendChild(commentItem);
+                commentInput.value = ''; 
+            }
+        });
     </script>
 {{else}}
-    <div class="error"> There was an error logging in. Please try logging in again. </div>
+    <div class="error text-red-500">There was an error logging in. Please try logging in again.</div>
 {{/if}}

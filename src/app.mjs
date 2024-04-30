@@ -66,8 +66,7 @@ app.use((req, res, next) => {
 
 //path printer
 app.use((req, res, next)=> {
-    console.log("Method: ", req.method);
-    console.log(req.path.toUpperCase(), req.body);
+    console.log(req.method + ' ' + req.path.toUpperCase());
     next();
 });
 
@@ -101,8 +100,17 @@ router.get('/', async (req, res) => {
     try{
         const sessions = await CurrSessions.find().lean();
         const user = req.user;
+
+        if(!user)
+        {
+            res.render('login');
+        }
+        else 
+        {
+            res.render('home', { sessions, user: user, username: req.user.username});
+
+        }
         
-        res.render('home', { sessions, user: user, username: req.user.username});
     }
     catch(err)
     {
@@ -206,7 +214,7 @@ router.post('/register', function(req, res) {
 
         // Pass the current user and session data to the template
         const user = req.user;
-        res.render('session', { sesh: sesh, user: user });
+        res.render('session', { sesh: sesh, user: user});
 
         // WebSocket logic
         io.on('connection', (socket) => {
@@ -251,22 +259,7 @@ router.post('/register', function(req, res) {
 
 
 
-    socket.on('timerUpdate', (sessionId, remainingTime) => {
-        Sessions.findOneAndUpdate(
-            { _id: sessionId }, // Use _id instead of sessionId
-            { status: 'work' }, // Update the status to 'work'
-            { new: true } // Return the updated document
-        )
-        .then(session => {
-            console.log("SESSION: ", session);
-            io.to(sessionId).emit('timerUpdate', remainingTime);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-    
-        console.log("DEBUGGING: session ID that we are trying to find is: ", sessionId);
-    
+    socket.on('timerUpdate', (remainingTime) => {    
         if (!timerInterval) {
             timerInterval = setInterval(() => {
               remainingTime--;

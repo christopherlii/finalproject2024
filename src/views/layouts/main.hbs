@@ -4,35 +4,40 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LockedIn</title>
-    <link rel="stylesheet" href="/css/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/output.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+    
 
 </head>
-<body>
-<div id="outer">
-<header>
-    <nav>
-		<span class="home-link">
-            <a href="/">
-                <img src="/img/logo.png" alt="LinkedIn Logo" id="logo">
-            </a> 
-        </span>
-        <span class="login-status">
-            {{#if user}}
-                <a href=""></a>{{username}}
-            {{else}}
-                <a href="/register">Register</a> or <a href="/login">Login</a>
-            {{/if}}
-	    </span>
-    </nav>
-</header>
+<body class="bg-gray-100 text-gray-900">
+    <div id="outer" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <header class="bg-white shadow">
+            <nav class="flex justify-between items-center py-4">
+                <span class="home-link">
+                    <a href="/">
+                        <img src="/img/logo.png" alt="LinkedIn Logo" id="logo" class="h-24 w-24">
+                    </a> 
+                </span>
+                <span class="login-status text-sm">
+                    {{#if user}}
+                        <a href="" class="text-blue-500 hover:text-blue-800">{{username}}</a>
+                    {{else}}
+                        <a href="/register" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Register</a> or 
+                        <a href="/login" class="ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">Login</a>
+                    {{/if}}
+                </span>
+            </nav>
+        </header>
 
-<div class="content">
-{{{ body }}}
+        <div class="content mt-8 mb-20">
+            {{{ body }}}
+        </div>
 
-</div>
-
-<footer>
-</footer>
-
+        <footer class="bg-white shadow mt-20 py-6 text-center">
+            <p class="text-gray-600 text-sm">© 2024 LockedIn. All rights reserved.</p>
+        </footer>
+    </div>
 </body>
 </html>

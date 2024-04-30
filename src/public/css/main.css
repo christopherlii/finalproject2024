@@ -1,6 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
 
 body {
 	height: 100vh;
@@ -10,6 +11,7 @@ body {
 	margin: auto;
 	margin-top: 0px;
 	padding: none;
+	background-color: blue;
 }
 
 .home-link {
@@ -107,3 +109,5 @@ input {
 #logo {
 	height: 4em;
 }
+
+

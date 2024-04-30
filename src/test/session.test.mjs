@@ -24,40 +24,48 @@ describe('App', function() {
     // Test middleware function
     describe('Middleware', function() {
         it('should log request method and path', function(done) {
-            const consoleSpy = sinon.spy(console, 'log'); // Assuming you're using sinon for spies
-
+            const consoleSpy = sinon.spy(console, 'log'); // Use sinon to spy on console.log
+    
             request(app)
                 .post('/')
-                .send({ /* Your request body */ })
+                .send({ username: 'testuser', password: 'testpassword' })
                 .end(function(err, res) {
-                    expect(consoleSpy.calledWith('Method: POST')).to.be.true;
-                    expect(consoleSpy.calledWith('POST', '/')).to.be.true;
+                    sinon.assert.calledWith(consoleSpy, 'POST /'); // Check if the right message was logged
+                    consoleSpy.restore(); // Restore the original console.log function
                     done();
                 });
         });
     });
+    
 
     // Test WebSocket communication
     // Test WebSocket communication
-describe('WebSocket', function() {
-    let socket;
-
-    before(function(done) {
-        socket = io('http://localhost:3000'); // Replace 'http://localhost:3000' with your server URL
-        socket.on('connect', function() {
-            done();
+    describe('WebSocket', function() {
+        let socket;
+    
+        before(function(done) {
+            socket = io('http://localhost:3000'); // Connect to your WebSocket server
+            socket.on('connect', done);
+        });
+    
+        it('should emit timerUpdate event with remaining time', function(done) {
+            const remainingTime = 1500;
+    
+            // Emit timerUpdate from the client
+            socket.emit('timerUpdate', remainingTime);
+    
+            // Listen for timerUpdate on the server
+            socket.on('timerUpdate', function(time) {
+                expect(time).to.equal(remainingTime-1);
+                done();
+            });
+        });
+    
+        after(function() {
+            socket.close(); // Close the socket connection after the test
         });
     });
-
-    it('should emit timerUpdate event with remaining time', function(done) {
-        const remainingTime = 1500;
-        socket.emit('timerUpdate', remainingTime);
-        socket.on('timerUpdate', function(time) {
-            expect(time).to.equal(remainingTime);
-            done();
-        });
-    });
-});
+    
 
 
     // Test register route
