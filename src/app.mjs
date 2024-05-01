@@ -96,26 +96,22 @@ const Sessions = mongoose.model('Sessions');
 
 
 router.get('/', async (req, res) => {
-    try{
+    try {
         const sessions = await CurrSessions.find().lean();
         const user = req.user;
 
-        if(!user)
-        {
-            res.render('login');
-        }
-        else 
-        {
-            res.render('home', { sessions, user: user, username: req.user.username});
+        // Filter sessions to only include those where the date matches today's date
+        const today = new Date().toISOString().slice(0, 10);
+        const todaysSessions = sessions.filter(session => session.date === today);
 
+        if(!user) {
+            res.render('login');
+        } else {
+            res.render('home', { sessions: todaysSessions, user: user, username: req.user.username});
         }
-        
-    }
-    catch(err)
-    {
+    } catch(err) {
         console.log(err);
-        res.status(500);
-        res.send("500 - Internal Error");
+        res.status(500).send("500 - Internal Error");
     }
 });
 

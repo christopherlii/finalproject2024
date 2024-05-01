@@ -65,6 +65,26 @@
             var fiveMinutes = 60 * 25, // Change this to your desired initial time
                 display = document.querySelector('#timer');
             startTimer(fiveMinutes, display);
+
+
+             const initialComments = [
+            { author: "server", message: "Session Started" },
+            { author: "server", message: "Feel Free to take notes here!" },
+        ];
+
+        // Function to add a comment to the DOM
+        function addCommentToDOM(commentText) {
+            const commentsList = document.getElementById('commentsList');
+            const commentItem = document.createElement('li');
+            commentItem.textContent = commentText;
+            commentsList.appendChild(commentItem);
+        }
+
+        // Adding initial comments to the DOM using map
+        initialComments.map(comment => {
+            const commentText = `${comment.author} said: ${comment.message}`;
+            addCommentToDOM(commentText);
+        });
         };
 
 
@@ -106,15 +126,20 @@
             const commentInput = document.getElementById('commentInput');
             const newComment = "Anon said: " + commentInput.value;
             if (newComment.trim()) {
-                // Append comment to the comment list
-                const commentsList = document.getElementById('commentsList');
-                const commentItem = document.createElement('li');
-                commentItem.textContent = newComment;
-                commentsList.appendChild(commentItem);
-                commentInput.value = ''; 
+                addCommentToDOM(newComment);
+                commentInput.value = '';
             }
         });
+
+       
+
+
+
+        
+
+
     </script>
 {{else}}
     <div class="error text-red-500">There was an error logging in. Please try logging in again.</div>
 {{/if}}
+ 
