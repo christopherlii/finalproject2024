@@ -2,7 +2,6 @@
     <h2 class="text-xl font-bold">{{sesh.name}}</h2>
     <h1 id="timer" class="text-3xl font-semibold">25:00</h1>
 
-    <!-- Comment Section -->
     <div id="commentSection" class="mt-6">
         <h3 class="text-lg font-semibold">Comments</h3>
         <ul id="commentsList" class="list-disc pl-5"></ul>
@@ -16,12 +15,10 @@
     <script>
         const socket = io();
 
-        // Event listener to receive timer updates from the server
         socket.on('timerUpdate', (time) => {
             updateTimer(time);
         });
 
-        // Function to send timer updates to the server
         function sendTimerUpdate(remainingTime) {
             console.log('reminaing time', remainingTime);
             socket.emit('timerUpdate', remainingTime);
@@ -32,7 +29,7 @@
         let startTime;
         let paused = false;
         let elapsedTime = 0;
-        let remainingTime = 1 * 60 * 1000; // Initial timer value: 25 minutes
+        let remainingTime = 1 * 60 * 1000; 
         let status = 'work';
 
         function startTimer(duration, display) {
@@ -56,13 +53,13 @@
                     {
                         duration = 5 * 60 * 1000;
                         timer = duration;
-                    } // Restart the timer automatically
+                    } 
                 }
             }, 1000);
         }
 
         window.onload = function () {
-            var fiveMinutes = 60 * 25, // Change this to your desired initial time
+            var fiveMinutes = 60 * 25, 
                 display = document.querySelector('#timer');
             startTimer(fiveMinutes, display);
 
@@ -72,7 +69,6 @@
             { author: "server", message: "Feel Free to take notes here!" },
         ];
 
-        // Function to add a comment to the DOM
         function addCommentToDOM(commentText) {
             const commentsList = document.getElementById('commentsList');
             const commentItem = document.createElement('li');
@@ -80,7 +76,6 @@
             commentsList.appendChild(commentItem);
         }
 
-        // Adding initial comments to the DOM using map
         initialComments.map(comment => {
             const commentText = `${comment.author} said: ${comment.message}`;
             addCommentToDOM(commentText);
@@ -113,14 +108,12 @@
             const seconds = Math.floor((remainingTime % 60000) / 1000);
             const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-            // Update timer display only if it has changed
             const timerElement = document.getElementById('timer');
             if (timerElement.textContent !== formattedTime) {
                 timerElement.textContent = formattedTime;
             }
         }
 
-        // Comment functionality
         document.getElementById('commentForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const commentInput = document.getElementById('commentInput');

@@ -87,6 +87,10 @@ Here is my sitemap:
 
 10 points total out of 10 required points 
 
+## Screenshots of Testing
+![headlessChrome](documentation/headlessChrome.png)
+![mochaTesting](documentation/mochaTesting.png)
+
 ## [Link to Initial Main Project File](app.mjs) 
 
 ## Annotations / References Used
