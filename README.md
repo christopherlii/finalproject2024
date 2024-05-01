@@ -4,16 +4,15 @@
 
 Want to focus, and be held accountable? Join a group or an online study session with your friends! It's time to lock in. 
 
-LockedIn is a web app that will allow users to study together using pomodoro techniques. Users can register and login. Once they're logged in, they can access pomodoro timers and different features in order to see their progress over long periods of time.
+LockedIn is a web app that will allow users to study together using pomodoro techniques. Users can register and login. Once they're logged in, they can access pomodoro timers and other different features.
 
 
 ## Data Model
 
-The application will store Users, Groups and Sessions
+The application will store Users and Sessions
 
 * users can have multiple groups (via references)
-* groups are a collection of users 
-* sessions are objects that contains data about groups, users, study time, etc.
+* sessions are objects that contains data about users, study time, etc.
 
 An Example User:
 
@@ -76,22 +75,21 @@ Here is my sitemap:
 2. as a user, I can log in to the site
 3. as a user, I can create a new session
 4. as a user, I can view all of the available sessions in a single list, as well as recent data
-5. as a user, I can see my own profile and others' profiles, and everybody's progress
-6. as a user, I can interact with a current session
+5. as a user, I can interact with a current session
 
 ## Research Topics
 
-* (6 points) Use a Front End Framework
-    * Using ReactJS
+* (5 points) Unit Testing with Puppeteer
 * (3 points) Unit Testing with JavaScript
     * Using Mocha and Chai to unit test 
 * (2 points) tailwind.css
     * Use a CSS framework or UI toolkit, use a reasonable of customization of the framework (don't just use stock Bootstrap - minimally configure a theme)
 
-11 points total out of 10 required points 
+10 points total out of 10 required points 
 
 ## [Link to Initial Main Project File](app.mjs) 
 
 ## Annotations / References Used
 
-none so far
+(https://tailwindcss.com/docs/) — for basically all CSS
+Homework #06 — Most of Auth + CSS for Auth and NavBar

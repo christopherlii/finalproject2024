@@ -1,17 +1,17 @@
-<h2>Lets get you LockedIn!</h2>
+<h2 class="text-2xl font-bold text-center mb-4">Let's get you LockedIn!</h2>
 {{#if message}}
-<div class="error">{{ message }}</div>
+<div class="bg-red-500 text-white p-2 rounded text-center mb-4">{{ message }}</div>
 {{/if}}
-<form method="POST" action="register">
-	<div>
-		<label for="username">Username:</label>
-		<input type="text" name="username" value="" id="username">
+<form method="POST" action="register" class="max-w-md mx-auto">
+	<div class="mb-4">
+		<label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
+		<input type="text" name="username" id="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+	</div>
+	<div class="mb-6">
+		<label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+		<input type="password" name="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
 	</div>
 	<div>
-		<label for="password">Password:</label> 
-		<input type="password" name="password" value="" id="password">
-	</div>
-	<div>
-		<input type="submit" value="Register" id="registerButton">
+		<input type="submit" value="Register" id="registerButton" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
 	</div>
 </form>

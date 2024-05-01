@@ -1,17 +1,17 @@
-<h2>Welcome Back!</h2>
+<h2 class="text-2xl font-semibold text-center mb-6">Welcome Back!</h2>
 {{#if message}}
-<div class="error">{{ message }}</div>
+<div class="bg-red-500 text-white text-center p-3 rounded-md mb-4">{{ message }}</div>
 {{/if}}
-<form method="POST" action="login">
-	<div>
-		<label for="username">Username:</label>
-		<input type="text" name="username" value="" id="username">
+<form method="POST" action="login" class="max-w-sm mx-auto bg-white p-6 rounded-lg shadow">
+	<div class="mb-4">
+		<label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+		<input type="text" name="username" id="username" value="" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+	</div>
+	<div class="mb-6">
+		<label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+		<input type="password" name="password" id="password" value="" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
 	</div>
 	<div>
-		<label for="password">Password:</label> 
-		<input type="password" name="password" value="" id="password">
-	</div>
-	<div>
-		<input type="submit" value="Login" id="loginButton">
+		<input type="submit" value="Login" id="loginButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
 	</div>
 </form>

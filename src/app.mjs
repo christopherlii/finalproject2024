@@ -9,7 +9,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import passport from 'passport';
-import strat from 'passport-local';
 
 import mongoose from 'mongoose';
 
@@ -212,27 +211,20 @@ router.post('/register', function(req, res) {
             return res.send('404 Not Found');
         }
 
-        // Pass the current user and session data to the template
         const user = req.user;
         res.render('session', { sesh: sesh, user: user});
 
-        // WebSocket logic
         io.on('connection', (socket) => {
             console.log("New User Joined");
 
-            // Emit the initial timer value to the newly connected client
             socket.emit('timerUpdate', sesh.timerValue);
 
-            // Handle timer updates from clients
             socket.on('timerUpdate', (remainingTime) => {
-                // Broadcast the timer update to all clients
                 io.emit('timerUpdate', remainingTime);
             });
 
 
 
-            // Other WebSocket event handlers
-            // ...
         });
     } catch (err) {
         console.log(err);
