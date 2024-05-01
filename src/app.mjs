@@ -100,7 +100,6 @@ router.get('/', async (req, res) => {
         const sessions = await CurrSessions.find().lean();
         const user = req.user;
 
-        // Filter sessions to only include those where the date matches today's date
         const today = new Date().toISOString().slice(0, 10);
         const todaysSessions = sessions.filter(session => session.date === today);
 
@@ -119,12 +118,12 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const { name } = req.body;
     const date = new Date();
-    const day = "" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + (date.getYear() + 1900);
+    const today = new Date().toISOString().slice(0, 10);
     try
     {
         const sesh = new CurrSessions({
             name: name,
-            date: day,
+            date: today,
             users: 1,
             sessionId: name + '_' + date 
         });
